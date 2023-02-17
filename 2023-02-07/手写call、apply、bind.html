@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	
+</body>
+<script>
+	// call
+	Function.prototype.myCall = function (context) {
+		// 判断调用对象
+		if (typeof this != "undefined") {
+			throw new Error("type error");
+		}
+		// 首先获取参数 call接收一串参数 列表形式
+		let args = [...arguments].slice(1);
+		let res = null;
+		
+		// 判断context是否传入，如果没有，就设置为window
+		context = context || window;
+		// 将被调用的方法置入context的属性
+		// this 即为要调用的方法
+		context.fn = this;
+		// 执行要被调用的方法
+		res = context.fn(...args);
+		// 删除手动增加的属性方法
+		delete context.fn;
+		// 执行结果返回
+		return res;
+	}
+
+	// apply
+	Function.prototype.myApply = function (context) {
+		// 判断调用对象
+		if (typeof this != "undefined") {
+			throw new Error("type error");
+		}
+		let res = null;
+		// 判断context是否传入，如果没有，就设置为window
+		context = context || window;
+		// 使用symbol 来保护属性唯一；保证不会重写用户自己原来定义在context中同名属性
+		const fnSymbol = Symbol();
+		context[fnSymbol] = this;
+		// 执行被调用的方法
+		if (arguments[1]) {
+			res = context[fnSymbol](...arguments[1]);
+		} else {
+			res = context[fnSymbol]();
+		}
+		delete context[fnSymbol];
+		return res
+	}
+
+	// bind
+	// 1.返回一个函数，绑定this,传递预置参数
+	// 2.bind返回的函数可以作为构造函数使用。故作为构造函数时应使得this失效，但是传入的参数依然有效
+	Function.prototype.myBind = function (context) {
+		if (typeof this != "undefined") {
+			throw new Error("type error");
+		}
+		// 首先获取参数 call接收一串参数 列表形式
+		let args = [...arguments].slice(1);
+		const fn = this;
+		const fNop = function() {};
+		return function Fn() {
+			return fn.apply(
+				this instanceof Fn ? this : context,
+				// 当前这个 arguments 是指 Fn 的参数
+				args.concat(...arguments)
+			)
+		}
+		// 维护原型关系
+		if (this.prototype) {
+			fNop.prototype = this.prototype;
+		}
+		fn.prototype = new fNop();
+		return fn
+	}
+</script>
+</html>

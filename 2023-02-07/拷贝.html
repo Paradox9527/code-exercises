@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // 基本类型赋值时，赋的是数据，所以不存在深拷贝和浅拷贝的问题
+        // var x = 100
+        // var y = x // 此时 x和y的值都是100  如果要改变y的值，x的值不会改变。
+        // 浅拷贝
+        // var arr1 = new Array(12,23,34)
+        // var arr2 = arr1 // 这是一个最简单的浅拷贝
+        // console.log(arr1);
+        // arr2[0] = 22
+        // console.log(arr1);
+        // 如果要改变arr所应用的数据，arr2[0]=100时，那么arr1[0]的值也是100
+        // 原因就是arr1和arr2引用了同一块内存区域
+
+        // let colors = ["red", "green", "blue"];
+        // let removed = colors.splice(1, 2, "yellow", "orange")
+        // console.log(colors) // red,yellow,orange,green,blue
+        // console.log(removed) // [] 返回删除的数组
+
+        // for (let i = 0; i < 5; i++) {
+        //     setTimeout(() => {
+        //         console.log(i);
+        //     }, 1000*i)  // 1秒输出一个 数字 0 1 2 3 4
+        // }
+        // const dataAttribute = document.createAttribute('custom');
+        // console.log(dataAttribute);   
+
+        // 精确小数的加法
+        // function add(num1, num2) {
+        //     const num1Digits = (num1.toString().split('.')[1] || '').length;
+        //     console.log(num1Digits);
+        //     const num2Digits = (num2.toString().split('.')[1] || '').length;
+        //     console.log(num2Digits);
+        //     const baseNum = Math.pow(10, Math.max(num1Digits, num2Digits));
+        //     console.log(baseNum);
+        //     return (num1 * baseNum + num2 * baseNum) / baseNum;
+        // }
+        // console.log(add(0.12,0.2));
+
+        // function add(a, b) {
+        //     // 不等于直接return了 退出了，下面的都不执行了
+        //     if(a !== 2) {
+        //         return
+        //     }
+        //     // console.log(a+b);
+        //     if(a !== 0) {
+        //         console.log(a+b);
+        //     }
+        // }
+        // add(2,2)
+        // let text = "cat, bat, sat, fat";
+        // let pos = text.search(/at/);
+        // console.log(pos); // 1
+        console.log(Boolean({}));
+
+        let colors = new Array(); // 创建一个数组
+        let count = colors.unshift("red", "green"); // 从数组开头推入两项
+        console.log(colors);
+        // alert(count); // 2
+
+        // 用json对象的方式(也是引用类型)来演示浅拷贝和深拷贝
+        var p = {
+            "id": "007",
+            "name": "刘德华",
+            "books": new Array("三国演义", "红楼梦", "水浒传") // 这是引用类型
+        }
+        // 浅拷贝
+        // var p2 = {}
+        // for(let key in p) {
+        //     p2[key] = p[key]
+        // }
+        // p2.books[0] = "四国"
+        // console.log(p2);
+        // console.log(p);
+        // 结果会是这两个都改变了，因为指向都是一样的地址
+
+        // 深拷贝(初步)
+        var p2 = {}
+        for (let key in p) {
+            if (typeof p[key] == 'object') {
+                p2[key] = [] // 因为上面写的books是数组，所以暂时赋值成一个空数组
+                for (let i in p[key]) {
+                    p2[key][i] = p[key][i] // 把数组里的一个一个的赋值
+                }
+            } else {
+                p2[key] = p[key]
+            }
+        }
+        // p2.books[0] = "四国"
+        // console.log(p2);
+        // console.log(p);
+        // 只有p2 的books里的数据变成了四国
+
+
+        // 深拷贝（最终）
+        // 如果对象的属性是对象(引用类型) 属性的属性也是引用类型，即层层嵌套很多 就用递归
+        var a = {
+            "id": "007",
+            "name": "刘德华",
+            "wife": {
+                "id": "008",
+                "name": "刘德华的妻子",
+                "address": {
+                    "city": "北京",
+                    "area": "海定区"
+                }
+            }
+        }
+
+        // 函数
+        function copyObj(obj) {
+            let newObj = {}
+            for (let key in obj) {
+                if (typeof obj[key] == 'object') {
+                    // 如果key是wife，引用类型，那就递归
+                    newObj[key] = copyObj(obj[key])
+                } else {
+                    // 基本类型 直接赋值
+                    newObj[key] = obj[key]
+                }
+            }
+            return newObj
+        }
+
+        // let pNew = copyObj(a)
+        // pNew.wife.name = "张三丰"
+        // pNew.wife.address.city = "香港"
+        // console.log(pNew);
+        // console.log(a);
+
+        // 如果属性是数组等非键值对的对象，就得单独处理：
+        // 要么给数组增加一个自我复制的函数(建议这样做)，要么单独判断
+        Array.prototype.copyself = function () {
+            let arr = new Array()
+            for (let i in this) {
+                arr[i] = this[i]
+            }
+            return arr
+        }
+
+        function copyObj123(obj) {
+            let newObj = {}
+            for (let key in obj) {
+                if (typeof obj[key] == 'object') {
+                    newObj[key] = obj[key].copyself()
+                } else {
+                    newObj[key] = obj[key]
+                }
+            }
+            return newObj
+        }
+        // var ppNew = copyObj123(p)
+        // ppNew.books[0] = "四国"
+        // console.log(ppNew);
+        // console.log(p);
+
+
+        // 最终版本
+        /*
+         deep clone
+         @param {[type]} parent object 需要进行克隆的对象
+         @return {[type]}  深克隆后的对象 
+        */
+        const clone = parent => {
+            // 判断类型
+            const isType = (obj, type) => {
+                if (typeof obj !== "object") return false
+                const typeString = Object.prototype.toString.call(obj)
+                let flag
+                switch (type) {
+                    case "Array":
+                        flag = typeString === "[object Array]"
+                        break;
+                    case "Date":
+                        flag = typeString === "[object Date]"
+                        break;
+                    case "RegExp":
+                        flag = typeString === "[object RegExp]"
+                        break;
+                    default:
+                        flag = false;
+                }
+                return flag
+            };
+
+            // 处理正则
+            const getRegExp = re => {
+                var flags = ""
+                if (re.global) flags += "g"
+                if (re.ignoreCase) flags += "i"
+                if (re.multiline) flags += "m"
+                return flags
+            };
+
+            // 维护两个储存循环引用的数组
+            const parents = []
+            const children = []
+
+            const _clone = parent => {
+                if (parent === null) return null
+                if (typeof parent !== "object") return parent
+
+                let child, proto
+
+                if (isType(parent, "Array")) {
+                    // 对数组做特殊处理
+                    child = []
+                } else if (isType(parent, "RegExp")) {
+                    // 对正则对象做特殊处理
+                    child = new RegExp(parent.source, getRegExp(parent))
+                    if (parent.lastIndex) child.lastIndex = parent.lastIndex
+                } else if (isType(parent, "Date")) {
+                    // 对Date对象做特殊处理
+                    child = new Date(parent.getTime())
+                } else {
+                    // 处理对象原型
+                    proto = Object.getPrototypeOf(parent)
+                    // 利用object.create切断原型链
+                    child = Object.create(proto)
+                }
+
+                // 处理循环引用
+                // 返回在数组中可以找到一个给定元素的第一个索引，如果不存在，则返回-1。
+                const index = parents.indexOf(parent)
+
+                if (index != -1) {
+                    // 如果父数组存在本对象，说明之前已经被引用过，直接返回此对象
+                    return children[index]
+                }
+                parents.push(parent)
+                children.push(child)
+
+                for (let i in parent) {
+                    // 递归
+                    child[i] = _clone(parent[i])
+                }
+
+                return child
+            }
+            return _clone(parent)
+        }
+
+        var pNew = clone(p)
+        pNew.books[0] = "四国"
+        // console.log(pNew);
+        // console.log(p);
+    </script>
+</body>
+
+</html>

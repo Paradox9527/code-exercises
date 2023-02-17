@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	<div id="app">
+		<input v-model="username" type="text" placeholder="请输入用户名" autocomplete="off">
+		<span v-bind="username"></span><br>
+		<input v-model="password" type="text" placeholder="请输入密码" autocomplete="off">
+		<span v-bind="password"></span>
+	</div>
+</body>
+<script>
+	// 声明构造函数Vue
+	var Vue = function (options) {
+		// 创建实例时传递M层的数据，数据层发生了set操作，就自动更新页面
+		this.$data = options.data;
+
+		// 需要一个指令集,因为可能存在多个指令.这里所说的指令其实就是元素的属性
+		this.$bindings = {};
+
+		// 根节点 dom元素
+		this.$el = document.getElementById(options.el);
+
+		this.init(); // 直接调用->初始化阶段 M->VM->V
+		this.compile(); // 直接调用->编译阶段
+	}
+
+	// 将Vue的内部方法完善，使用原型重写
+	Vue.prototype.init = function () {
+		console.log("获取Mode层的数据");
+		let _this = this;
+		// 初始化时,劫持数据 即遍历上述的$data
+		for (let key in _this.$data) {
+			// 遍历数据的时候,给每一个Model属性配置指令集
+			this.$bindings[key] = {
+				directives: []
+			}
+			let value = _this.$data[key]; // _this.$data[key] 会触发get函数 因为相当于读取,就是会读取对象的get函数
+			// 使用object的defineProperty,对某个对象的某个key进行劫持
+			Object.defineProperty(_this.$data, key, {
+				get: function() {
+					return value;
+				},
+				set: function(newVal) {
+					// set时,遍历指令集,更新DOM
+					value = newVal;
+					// 更新DOM
+					_this.$bindings[key].directives.forEach(watcher => {
+						watcher.update();
+					})
+				}
+			})
+		}
+	}
+
+	Vue.prototype.compile = function () {
+		// 编译阶段,根据传过来的el(根节点元素),遍历每个子节点,挨个检查元素是否有对应的指令,有就进行绑定
+		console.log("监听DOM元素");
+		// console.log(this);
+		let _this = this; // 监听input事件回调,丢失了vue实例的this指向,所以要在外层将指向vue实例的this保存一下
+		let nodes = this.$el.children;
+		// console.log(nodes);
+		for (let i = 0; i < nodes.length; i++) {
+			let node = nodes[i];
+
+			if (node.hasAttribute('v-model')) {
+				let dataKey = node.getAttribute('v-model');
+				// console.log(dataKey); // username
+				// 如果是v-model指令,就监听DOM的input事件
+				node.addEventListener('input', function() {
+					// 更新Model
+					// console.log(this); 
+					// console.log(_this);
+					_this.$data[dataKey] = node.value; // 赋值
+				})
+				// 添加Watcher
+				_this.$bindings[dataKey].directives.push(new Watcher(
+					node,
+					'value',
+					_this,
+					dataKey
+				))
+			} else if (node.hasAttribute('v-bind')) {
+				let dataKey = node.getAttribute('v-bind');
+				console.log(dataKey);
+				_this.$bindings[dataKey].directives.push(new Watcher(
+					node,
+					'innerHTML',
+					_this,
+					dataKey
+				))
+			}
+		}
+	}
+
+	// 侦听
+	var Watcher = function (dom, expression, vm, dataKey) {
+		this.dom = dom;
+		this.expression = expression;
+		this.vm = vm;
+		this.dataKey = dataKey;
+		this.update();
+	}
+
+	Watcher.prototype.update = function () {
+		console.log("窃听到了");
+		this.dom[this.expression] = this.vm.$data[this.dataKey];
+	}
+
+	// 使用构造函数创建实例
+	var vm = new Vue({
+		// 需要被vue控制的根元素ID，即我们的app
+		el: "app",
+
+		// Model数据层
+		data: {
+			username: 'jack',
+			password: '123456'
+		}
+	})
+</script>
+</html>

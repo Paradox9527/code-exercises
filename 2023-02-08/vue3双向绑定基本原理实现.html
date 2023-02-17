@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	
+</body>
+<script>
+	const data = {
+		username: 'GG',
+		password: '123456'
+	}
+
+	function reactive(target) {
+		const handler ={
+			get: function(target, key, receiver) {
+				console.log(`访问了${key}属性`);
+				return Reflect.get(target, key, receiver);
+			},
+			set: function(target, key, value, receiver) {
+				console.log(`将${key}由->${target[key]}->设置为->${value}`);
+				Reflect.set(target, key, value, receiver);
+			}
+		}
+		return new Proxy(target, handler);
+	}
+
+	const proxyData = reactive(data);
+
+	console.log(proxyData.username);
+	
+	proxyData.username = '我是你大爷';
+
+	proxyData.id = 1234
+
+	// 使用这种方式的好处，可以实现新增属性，vue2中要调用api等
+
+	// 基本实现原理的track 和 trigger 函数
+	// 举例 多对象
+</script>
+<script src="./track&trigger&ref&computed.js"></script>
+</html>

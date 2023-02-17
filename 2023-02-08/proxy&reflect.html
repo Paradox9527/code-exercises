@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	
+</body>
+<script>
+	const person = { name: '林三心', age: 22 }
+
+	const proxyPerson = new Proxy(person, {
+	    get(target, key, receiver) {
+	        console.log(target) // 原来的person
+	        console.log(key) // 属性名
+	        console.log(receiver) // 代理后的proxyPerson
+			return Reflect.get(target, key, receiver)
+			// return Reflect.get(receiver, key) // 相当于 receiver[key]
+	    },
+	    set(target, key, value, receiver) {
+	        console.log(target) // 原来的person
+	        console.log(key) // 属性名
+	        console.log(value) // 设置的值
+	        console.log(receiver) // 代理后的proxyPerson
+			Reflect.set(target, key, value, receiver)
+			// Reflect.set(receiver, key, value) // 相当于 receiver[key] = value 堆栈报错
+	    }
+	})
+	
+	proxyPerson.name // 访问属性触发get方法
+	
+	proxyPerson.name = 'sunshine_lin' // 设置属性值触发set方法
+</script>
+</html>

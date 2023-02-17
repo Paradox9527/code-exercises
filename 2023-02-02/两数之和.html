@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	
+</body>
+<script>
+	// 方法一，暴力枚举
+	var twoSum = function(nums, target) {
+	    var num = null;
+	    var positionArr = [];
+	    for (let i = 0; i < nums.length; i++) {
+	        num = nums[i];
+	        for (let j = i + 1; j < nums.length; j++) {
+	            if (num + nums[j] == target) {
+	                positionArr.push(i);
+	                positionArr.push(j);
+	                break;
+	            }
+	        }
+	    }
+	    return positionArr;
+	};
+	const nums = [2,7,11,15];
+	const target = 9;
+	console.log(twoSum(nums, target));
+
+	// 方法二，哈希方法
+	var twoSumHash = function (nums, target) {
+		const map = new Map();
+		for (let i = 0; i < nums.length; i++) {
+			const num = target - nums[i]; // 第二次循环为9-7等于2 
+			if (map.has(num)) { // 第二次循环在map中找到了
+				console.log(map.get(num));
+				console.log([map.get(num), i]);
+				return [map.get(num), i];
+			} else { // 一开始存了2进去
+				map.set(nums[i], i);
+			}
+		}
+		return [];
+	}
+	console.log(twoSumHash(nums, target));
+</script>
+</html>

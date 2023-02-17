@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	<ul id="list">
+		<li class="item">哈哈</li>
+		<li class="item">呵呵</li>
+		<li class="item">嘿嘿</li>
+	</ul>
+</body>
+<script>
+	// 虚拟DOM 一个用来表示真实的DOM对象
+	let oldVDOM = { // 旧虚拟DOM
+        tagName: 'ul', // 标签名
+        props: { // 标签属性
+            id: 'list'
+        },
+        children: [ // 标签子节点
+            {
+                tagName: 'li', props: { class: 'item' }, children: ['哈哈']
+            },
+            {
+                tagName: 'li', props: { class: 'item' }, children: ['呵呵']
+            },
+            {
+                tagName: 'li', props: { class: 'item' }, children: ['嘿嘿']
+            },
+        ]
+    }
+</script>
+</html>
