@@ -55,20 +55,7 @@ const a = 'anagram';
 const b = 'nagaram';
 
 const isAnagram = function (s, t) {
-	const sLen = s.length;
-	const tLen = s.length;
-	if (sLen !== tLen) {
-		return;
-	}
-	const obj = {};
-	for(let i = 0; i< sLen; i++) {
-		const currentS = s[i];
-		const currentT = t[i];
-		obj[currentS] ? obj[currentS]++ : obj[currentS] =  1;
-		obj[currentT] ? obj[currentT]-- : obj[currentT] = -1;
-	}
-	console.log(obj);
-	return Object.values(obj).every(v => v === 0);
+	return s.length == t.length && [...s].sort().join('') === [...t].sort().join('')
 }
 
 // isAnagram(a, b)
