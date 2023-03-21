@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        var path = 'www.baidu.com?id=1&user=123&pass=abc';
+        const urlParams = function (url) {
+            let newUrl = url.split('?');// 分割成两部分的数组
+            var newArr = newUrl[1].split('&');
+            console.log(newArr);
+            var obj = {}
+            for(let i = 0; i < newArr.length; i++) {
+                var param = newArr[i].split('=');
+                obj[param[0]] = param[1]; // 对象赋值
+            }
+            return obj
+        }
+        console.log(urlParams(path));
+    </script>
+</body>
+</html>
+
