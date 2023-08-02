@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body{
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+    }
+    section {
+        flex: 1;
+        display: flex;
+        flex-direction: row;
+    }
+
+    header {
+        background-color: aliceblue;
+    }
+    div.main {
+        background-color: aqua;
+        flex: 1;
+        height: 100vh;
+    }
+    div.left, div.right {
+        flex: 0 0 50px;
+        
+    }
+    div.left {
+        order: -1;
+    }
+    .left {
+        background-color: aquamarine;
+        height: 100vh;
+    }
+    .right {
+        background-color: brown;
+        height: 100vh;
+    }
+    footer {
+        background-color: bisque;
+    }
+
+    @media (max-width: 768px) {
+        section {
+            flex-direction: column;
+            flex: 1;
+        }
+        div.main {
+            flex: 1;
+        }
+        div.left, div.right {
+            flex: 0 0 50px;
+        }
+    }
+</style>
+<body>
+    <!-- flexBox是根据两个轴来设置的，垂轴和主轴，可以改变默认方向 -->
+    <!-- flex: flex-grow flex-shrink flex-basis -->
+    <header>头头是道</header>
+    <section>
+        <div class="main">主要内容区域</div>
+        <div class="left">虚坐以待</div>
+        <div class="right">无出其右</div>
+    </section>
+    <footer>海底捞月</footer>
+</body>
+</html>
