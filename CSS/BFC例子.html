@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    /* 防止margin塌陷 */
+    .wrap {
+        overflow: hidden;
+    }
+    p {
+        color: #fff;
+        background: #fcc;
+        width: 200px;
+        line-height: 100px;
+        text-align: center;
+        margin: 100px;
+    }
+
+    /* 清除内部浮动 */
+    .par {
+        border: 5px solid #fcc;
+        width: 300px;
+        overflow: hidden;
+    }
+    .child {
+        border: 5px solid #f66;
+        width: 100px;
+        height: 100px;
+        float: left;
+    }
+
+    body {
+        width: 300px;
+        position: relative;
+    }
+
+    .aside {
+        width: 100px;
+        height: 150px;
+        float: left;
+        background: #f66;
+    }
+
+    .main {
+        height: 200px;
+        background: #fcc;
+        overflow: hidden;
+    }
+</style>
+<body>
+    <!-- BFC 块级格式上下文，是页面中的一块渲染区域，并且有一套属于自己的渲染规则 -->
+    <!-- BFC的目的是形成一个相对于外界完全独立的空间，让内部的子元素不会影响到外部的元素 -->
+
+    <!-- 应用场景 -->
+    <!-- 防止margin重叠（塌陷） -->
+    <!-- 给其中一个p元素增加一个父盒子 -->
+    <!-- <p>Haha</p>
+    <div class="wrap">
+        <p>hehe</p>
+    </div> -->
+
+    <!-- 清除内部浮动 -->
+    <!-- <div class="par">
+        <div class="child"></div>
+        <div class="child"></div>
+    </div> -->
+
+    <!-- 自适应多栏布局 -->
+    <div class="aside"></div>
+    <div class="main"></div>
+</body>
+</html>
