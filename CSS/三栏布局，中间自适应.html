@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    /* 第一种 两边使用float 中间使用margin控制两边的间距
+     中间内容放在架构最后,父元素设置BFC 计算高度时考虑浮动的元素.
+     宽度小于左右部分宽度之和时,右侧部分会被挤下去*/
+    /* 缺陷:主体内容是最后加载的,右边在主体内容之前,如果是响应式设计,不能简单的换行展示 */
+    /* .wrap {
+        height: 200px;
+        padding: 20px;
+        background: #eee;
+        overflow: hidden; 
+    }
+    .left {
+        width: 200px;
+        height: 200px;
+        background: coral;
+        float: left;
+    }
+    .right {
+        width: 120px;
+        height: 200px;
+        background: lightblue;
+        float: right;
+    }
+    .middle {
+        height: 200px;
+        background: lightpink;
+        margin-left: 220px;
+        margin-right: 140px;
+    } */
+
+    /* 第二种 两边使用absolute 中间使用margin */
+    /* 绝对定位的元素脱离文档流,相对于最近的已经定位的祖先元素进行定位,无需考虑HTML中的解构顺序 */
+    /* .container {
+        position: relative;
+    }
+    .left,.right,.main {
+        height: 200px;
+        line-height: 200px;
+        text-align: center;
+    }
+
+    .left {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100px;
+        background: green;
+    }
+
+    .right {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100px;
+        background: green;
+    }
+
+    .main {
+        margin: 0 110px;
+        background: black;
+        color: white;
+    } */
+
+    /* 第三种 两边使用float和负margin */
+    /* .left,.right,.main {
+        height: 200px;
+        line-height: 200px;
+        text-align: center;
+    }
+
+    .main-wrapper {
+        float: left;
+        width: 100%;
+    }
+
+    .main {
+        margin: 0 100px;
+        background: black;
+        color: white;
+    }
+
+    .left,.right {
+        float: left;
+        width: 100px;
+        margin-left: -100%;
+        background: gray;
+    }
+
+    .right {
+        margin-left: -100px; 同自身宽度;
+    } */
+
+    /* 第四种 table布局 */
+    /* .container {
+        height: 200px;
+        line-height: 200px;
+        text-align: center;
+        display: table;
+        table-layout: fixed;
+        width: 100%;
+    }
+
+    .left,.right,.main {
+        display: table-cell;
+    }
+
+    .left,.right {
+        width: 100px;
+        background: gray;
+    }
+
+    .main {
+        background: black;
+        color: white;
+        width: 100%;
+    } */
+
+    /* 第五种 flex布局 */
+    /* .wrap {
+        display: flex;
+        justify-content: space-between;
+    }
+    .left,.right,.middle {
+        height: 100px;
+    }
+
+    .left {
+        width: 200px;
+        background: coral;
+    }
+
+    .right {
+        width: 120px;
+        background: lightblue;
+    }
+
+    .middle {
+        background-color: aliceblue;
+        width: 100%;
+        margin: 0 20px;
+    } */
+
+    /* 第六种 grid */
+    .wrap {
+        display: grid;
+        width: 100%;
+        grid-template-columns: 300px auto 300px;
+    }
+
+    .left,.right,.middle {
+        height: 100px;
+    }
+
+    .left {
+        background: crimson;
+    }
+
+    .right {
+        background-color: aliceblue;
+    }
+
+    .middle {
+        background-color: aqua;
+    }
+</style>
+
+<body>
+    <!-- 方法有很多 -->
+    <!--1 两边使用float 中间使用margin -->
+    <!--2 两边使用absolute 中间使用margin -->
+    <!--3 两边使用float 和负margin -->
+    <!--4 display：table实现 -->
+    <!--5 flex实现 -->
+    <!--6 grid网格布局 -->
+
+    <!-- 第一种 -->
+    <!-- <div class="wrap">
+        <div class="left">左侧</div>
+        <div class="right">右侧</div>
+        <div class="middle">中间</div>
+    </div> -->
+
+    <!-- 第二种定位 -->
+    <!-- 左右两边使用绝对定位,固定在两侧 -->
+    <!-- 中间占满一行 但通过margin和左右两边留出的10px的间隔 -->
+    <!-- <div class="container">
+        <div class="left">左边固定宽度</div>
+        <div class="right">右边固定宽度</div>
+        <div class="main">中间自适应</div>
+    </div> -->
+
+    <!-- 第三种 两边float 中间采用margin负值 -->
+    <!-- 实现过程: -->
+    <!-- 中间使用双层标签,外层是浮动的,便于左中右能在同一行展示 -->
+    <!-- 左边通过负margin-left:-100% 相当于中间的宽度, 所以向上偏移到左侧 -->
+    <!-- 右边通过负margin-left:-100px 相当于自身宽度,所以向上偏移到最右侧 -->
+    <!-- 缺点: 解构复杂,使用了负margin 调试相对麻烦 -->
+    <!-- <div class="main-wrapper">
+        <div class="main">中间自适应</div>
+    </div>
+    <div class="left">左边固定宽度</div>
+    <div class="right">右边固定宽度</div> -->
+
+    <!-- 第四种 table布局 -->
+    <!-- 层通过display:table设置为表格,设置table-layout:fixed 表示列宽自身宽度决定,而不是自动计算 -->
+    <!-- 内层的左中右使用display:table-cell设置为表格单元 -->
+    <!-- 左右设置固定宽度,中间设置width:100%填充剩下的宽度 -->
+    <!-- <div class="container">
+        <div class="left">左边固定宽度</div>
+        <div class="main">中间自适应</div>
+        <div class="right">右边固定宽度</div>
+    </div> -->
+
+    <!-- 第五种 flex布局 -->
+    <!-- 容器设置为display:flex -->
+    <!-- 盒内元素两端对齐，将中间元素设置为100%宽度，或者设置flex:1 即可填充空白 -->
+    <!-- 盒内元素的高度撑开容器的高度 -->
+
+    <!-- 比较可以：解构简单，可以使用order属性调整显示顺序，让主体内容优先加载，但展示在中间 -->
+    <!-- <div class="wrap">
+        <div class="left">左侧</div>
+        <div class="middle">中间</div>
+        <div class="right">右侧</div>
+    </div> -->
+
+    <!-- 第六种 网格布局grid -->
+    <!-- 解构简单 -->
+    <div class="wrap">
+        <div class="left">左侧</div>
+        <div class="middle">中间</div>
+        <div class="right">右侧</div>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    /* 第一种 */
+    /* .box {
+        overflow: hidden; 设置bfc
+    }
+    .left {
+        float: left;
+        width: 200px;
+        background-color: gray;
+        height: 400px;
+    }
+    .right {
+        margin-left: 210px;
+        background-color: lightgray;
+        height: 200px;
+    } */
+
+    /* 第二种 flex弹性布局 */
+    /* flex容器的一个默认属性值  align-items: stretch;*/
+    /* 这个属性导致列等高的效果，为让两个盒子高度自动，需要设置成 align-items: flex-start; */
+    .box {
+        display: flex;
+        align-items: flex-start;
+    }
+    .left {
+        background-color: gray;
+        width: 100px;
+        height: 200px;
+    }
+    .right {
+        background-color: lightgray;
+        flex: 1;
+    }
+</style>
+<body>
+    <!-- 基本原理：以一个定宽栏和一个自适应的栏并排展示 -->
+    
+    <!-- 第一种：利用BFC  浮动等 -->
+    <!-- 实现思路：使用float左浮左边栏 右边模块使用margin-left撑出内容做内容展示 -->
+    <!-- 为父级元素添加BFC，防止下方元素飞到上方内容 -->
+    <div class="box">
+        <div class="left">左边</div>
+        <div class="right">右边</div>
+    </div>
+</body>
+</html>

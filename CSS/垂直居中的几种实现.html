@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    /* 第一种 定位+margin：auto 定位四个方向全是0*/
+    /* .father {
+        width: 500px;
+        height: 300px;
+        border: 1px solid #0a3b98;
+        position: relative;
+    }
+    .son{
+        width: 100px;
+        height: 40px;
+        background: #f0a238;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+    } */
+
+    /* 第二种 定位加margin 负值，子元素宽高一半 也可用transform 取代这个margin负值*/
+    /* .father {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        background: skyblue;
+    }
+
+    .son {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-left: -50px;
+        margin-top: -50px;
+        transform: translate(-50%, -50%);
+        width: 100px;
+        height: 100px;
+        background-color: red;
+    } */
+    
+    /* 第三种 table布局 */
+    /* .father {
+        display: table-cell;
+        width: 200px;
+        height: 200px;
+        background: skyblue;
+        vertical-align: middle;
+        text-align: center;
+    }
+    .son {
+        display: inline-block;
+        width: 100px;
+        height: 100px;
+        background: red;
+    } */
+
+    /* 第四种 flex 弹性布局 */
+    /* .father {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 200px;
+        height: 200px;
+        background: skyblue;
+    }
+    .son {
+        width: 100px;
+        height: 100px;
+        background: red;
+    } */
+
+    /* 第五种 网格布局grid */
+    .father {
+        display: grid;
+        align-items: center;
+        justify-content: center;
+        width: 200px;
+        height: 200px;
+        background: skyblue;
+    }
+    .son {
+        width: 100px;
+        height: 100px;
+        border: 1px solid red;
+    }
+</style>
+
+<body>
+    <div class="father">
+        <div class="son"></div>
+    </div>
+</body>
+
+</html>
