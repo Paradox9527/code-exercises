@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <input type="button" value="按钮">
+</body>
+
+<script>
+    // 防抖：n秒后执行某个操作，如果在n秒内重复触发，就重新计时
+    // 例子：电梯进来一个人后，等待15秒后开始运送，但是这时候又进来一个人，则又要重新计时15s。15秒结束后则开始运送
+
+    // 防抖函数 需要执行的操作， 等待时间， 是否立即执行
+    function debounce(Fuc, wait, immediate) { // 防抖需要立即执行的话，用第三个参数来判断
+
+        let timeout;
+
+        return function () {
+            let context = this; // 函数执行下上文
+            let args = arguments; // 参数
+
+            if (timeout) clearTimeout(timeout); // timeout 不为null时， 就要重新计时
+            // 没有第三个参数 就直接是走下面的就行
+            if (immediate) {
+                let callNow = !timeout; // 第一次会立即执行，以后只有事件执行后才会再次触发
+                timeout = setTimeout(function () {
+                    timeout = null;
+                }, wait)
+                if (callNow) {
+                    Fuc.apply(context, args);
+                }
+
+            } 
+            else {
+                timeout = setTimeout(function () {
+                    Fuc.apply(context, args);
+                }, wait)
+            }
+        }
+    }
+
+
+    let myTestFun = debounce(function () {
+        // 某些操作；
+        console.log("点击了");
+    }, 1000, true)
+
+    const button = document.querySelector('input');
+    button.addEventListener('click', myTestFun)
+</script>
+
+</html>

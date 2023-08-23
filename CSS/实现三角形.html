@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .box {
+        width: 0px;
+        height: 0px;
+        /* border: 100px solid; */
+        border-style: solid;
+        border-width: 0 100px 100px;
+        border-color: transparent transparent #d9534f;
+        position: relative;
+    }
+
+    /* 空心三角形 添加伪类 */
+    .box:after {
+        content: '';
+        border-style: solid;
+        border-width: 0 90px 90px;
+        border-color: transparent transparent #fff;
+        position: absolute;
+        top: 6px;
+        left: -90px;
+    }
+
+    /* 直角三角形 */
+    .box1 {
+        /* 内部大小 */
+        width: 0px;
+        height: 0px;
+        /* 边框大小 */
+        border-top: transparent solid;
+        border-right: #4285f4 solid;
+        border-width: 85px;
+
+    }
+</style>
+<body>
+    <div class="box"></div>
+    <!-- 直角三角形 -->
+    <div class="box1"></div>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+
+<script>
+    // 实现一个new 操作符
+    let myNew = function(fuc, ...args) {
+        // 1.创建一个空对象
+        let obj = {};
+        // 2.使这个空对象的原型指向构造函数的原型
+        obj.__proto__ = fuc.prototype;
+        // 3.将构造函数的this指向新对象
+        let result = fuc.apply(obj, args);
+        // 4.判断这个result是否是对象 然后返回
+        return result instanceof Object ? result : obj;
+    }
+
+    function Person(name, age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    Person.prototype.say = function () {
+        console.log(this.name)
+    }
+
+    let p = myNew(Person, "paradox", 26);
+    console.log(p);
+    p.say();
+</script>
+</html>

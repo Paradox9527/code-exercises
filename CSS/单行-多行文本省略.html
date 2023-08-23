@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    /* p {
+        overflow: hidden;
+        line-height: 40px;
+        width: 400px;
+        height: 40px;
+        border: 1px solid red;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    } */
+
+    /* 基于行数 */
+    /* p {
+        width: 400px;
+        border-radius: 1px solit red;
+        -webkit-line-clamp: 2;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    } */
+
+
+    .demo {
+        position: relative;
+        line-height: 20px;
+        height: 40px;
+        overflow: hidden;
+    }
+
+    .demo::after {
+        content: "...";
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        padding: 0 20px 0 10px;
+    }
+</style>
+
+<body>
+    <!-- <p>这是一些文本这是一些文本这是一些文本这是一些文本这是一些文本这是一些文本这是一些文本这是一些文本这是一些文本这是一些文本</p> -->
+
+    <!-- 多行文本溢出 -->
+    <!-- 基于高度截断 伪元素+定位 -->
+    <div class="demo">这是一段很长的文本</div>
+
+    <!-- 基于行数截断 -->
+    <p>
+        这是一些文本这是一些文本这是一些文本这是一些文本这是一些文本
+        这是一些文本这是一些文本这是一些文本这是一些文本这是一些文本
+    </p>
+</body>
+
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+
+<script>
+    // 写一个随机生成颜色的函数，作为这次例子
+    function colorRamdon () {
+        let r = Math.floor( Math.random() * 255 );
+        let g = Math.floor( Math.random() * 255 );
+        let b = Math.floor( Math.random() * 255 )
+        document.body.style.background = `rgb(${r}, ${g}, ${b})`
+    }
+
+    // 节流：n秒内只运行1次，若在n秒内重复触发， 只有一次生效；
+    // 例子：电梯第一个人进来后，15s后准时运送一次，窗口缩放了，1000ms后变颜色这样
+    // 实现原理：时间戳写法，定时器写法，两者结合写法
+
+    // 时间戳写法，事件会立即执行，停止触发后没有办法再次执行
+    function throttled1 (fn, delay = 1000) {
+        let oldTime = Date.now();
+        return function (...args) {
+            let newTime = Date.now();
+            if (newTime - oldTime >= delay) {
+                fn.apply(null, args);
+                oldTime = Date.now();
+            } 
+        }
+    }
+
+    // 定时器写法 delay毫秒后第一次执行，第二次事件停止出发后依然会再一次执行
+    function throttled2 (fn, delay = 1000) {
+        let timer = null;
+        return function (...args) {
+            if(!timer) {
+                timer = setTimeout(() => {
+                    fn.apply(this, args);
+                    timer = null;
+                }, delay)
+            }
+        }
+    }
+
+    // 两者结合较为精准
+    function throttled3 (fn, delay = 1000) {
+        let timer = null;
+        let startTime = Date.now();
+        return function () {
+            let curTime = Date.now(); //当前时间
+            // 从上一次到现在， 还剩下多少多余的时间
+            let remaining = delay - (curTime - startTime);
+            let context = this;
+            let args = arguments;
+            clearTimeout(timer);
+            if (remaining <= 0) {
+                fn.apply(context, args);
+                startTime = Date.now();
+            } else {
+                timer = setTimeout(fn, remaining);
+            }
+        }
+    }
+
+
+    // 增加监听 窗口缩放，改变颜色 没有节流 会闪闪发光一样的感觉
+    window.addEventListener('resize', throttled3(colorRamdon))
+</script>
+</html>
