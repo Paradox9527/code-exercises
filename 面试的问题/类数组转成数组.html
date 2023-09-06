@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    // 类数组转成数组
+    // length是数组的一个属性，所以带有length属性的对象类似是个数组
+    let arrayLike = { length: 3 }
+
+    console.log(Array.from(arrayLike));
+    console.log(Array.apply(null, arrayLike));
+    console.log(Array.prototype.concat.apply([], arrayLike));
+</script>
+</html>

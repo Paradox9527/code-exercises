@@ -69,7 +69,7 @@ function reactive(target) {
 
 // 测试一下
 // 多对象
-// const person = { name: '李金锋', age: 22 }
+// const person = { name: 'qqq', age: 22 }
 // const animal = { type: '猫', height: 50 }
 
 // let nameStr1 = ''

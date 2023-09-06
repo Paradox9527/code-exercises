@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .first {
+        background: red;
+        height: 3rem;
+        opacity: 0.99;
+        z-index: 10;
+    }
+
+    .first .item {
+        height: 100%;
+        width: 3rem;
+        background-color: orange;
+        z-index: 0;
+    }
+
+    .second {
+        background-color: blue;
+        height: 3rem;
+        margin-top: -1.5rem;
+        z-index: 3;
+        position: relative;
+    }
+
+    .second .item {
+        z-index: 999;
+        height: 100%;
+        width: 3rem;
+        background-color: green;
+    }
+</style>
+
+<body>
+    <div class="first">
+        <div class="item"></div>
+    </div>
+    <div class="second">
+        <div class="item"></div>
+    </div>
+    <!-- <div class="third"></div> -->
+</body>
+
+</html>
