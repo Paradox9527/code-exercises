@@ -58,11 +58,11 @@
             let context = this;
             let args = arguments;
             clearTimeout(timer);
-            if (remaining <= 0) {
+            if (remaining <= 0) { // 时间到了就要直接回调
                 fn.apply(context, args);
                 startTime = Date.now();
-            } else {
-                timer = setTimeout(fn, remaining);
+            } else {// 没到时间 剩余时间定时
+                timer = setTimeout(fn, remaining); 
             }
         }
     }

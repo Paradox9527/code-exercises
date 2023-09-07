@@ -1,16 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
 </head>
+
 <body>
-	
+
 </body>
 <script>
+	// call的用法
+	function Person(a, b, c, d) {
+		return {
+			name: this.name,
+			a: a, b: b, c: c, d: d
+		}
+		// console.log(this.name);
+		// console.log(a, b, c, d);
+	}
+	let egg = {
+		name: "技术蛋老师",
+	}
+	// Person.call(egg) // 修改了this指向
+	// this的隐式绑定
+	// 将Person这个构造函数放在了egg这个对象钟
+	// let eggs = {
+	// 	name: "技术蛋老师",
+	// 	Person() {
+	// 		console.log(this.name);
+	// 	}
+	// }
+	// eggs.Person();
+	// 就像上面这个样子
+
+	Function.prototype.newCall = function (obj) {
+		// console.log(this);// 这个this是指向Person这个构造函数
+		obj = obj || window; // 对象是null就指向window
+		let res = null;
+		obj.p = this;
+		// 把参数都保留起来，并且不保留第一个this参数，arguments会包括this这个参数
+		let newArguments = [];
+		for (let i = 1; i < arguments.length; i++) {
+			newArguments.push(arguments[i])
+		}
+		// console.log(newArguments);
+		res = obj.p(...newArguments)
+		delete obj.p;// 要删除这个对象，不能改写了对象
+		return res
+	}
+	let aa = Person.newCall(egg, '点赞', '收藏', '转发', '充电');// call后面可以跟很多参数
+	// console.log(aa);
+
+	// apply第二个参数是个数组
+	Function.prototype.newApply = function (obj, arr) {
+		// console.log(this);// 这个this是指向Person这个构造函数
+		obj = obj || window; // 对象是null就指向window
+		let res = null;
+		obj.p = this;
+		// 判断是否传参数数组
+		if (!arr) { // 没传直接调用返回结果
+			res = obj.p();
+		} else {
+			// 把参数都保留起来，并且不保留第一个this参数，arguments会包括this这个参数
+			let newArguments = [];
+			for (let i = 0; i < arr.length; i++) {
+				newArguments.push(arr[i])
+			}
+			// console.log(newArguments);
+			res = obj.p(...newArguments)
+		}
+		delete obj.p;// 要删除这个对象，不能改写了对象
+		return res
+	}
+	let bibi = Person.newApply(egg, ['点赞', '收藏', '转发', '充电']);
+	// console.log(bibi);
+
+	// bind 会返回一个函数 bind还能配合new使用
+	function person1(a,b,c) {
+		console.log(this.name);
+		console.log(a,b,c);
+	}
+	person1.prototype.colection = '收藏'
+	Function.prototype.newBind = function (obj) {
+		if (typeof this !== 'function') {
+			throw new TypeError('错误')
+		}
+		let that = this;
+		// 内外有两个arguments 因为调用bind时我们还可以括号传参
+		let arr = Array.prototype.slice.call(arguments, 1); // 切割参数 
+		// let arr = [...arguments].slice(1) // 两者一样的
+		// console.log(arr);
+		let fnop = function() {} // 创建空函数
+		let newf = function() {
+			// console.log(this instanceof newf); // 此时this不是指向person1 而是指向一个实例 也就是发生了new构造函数
+			let arr2 = [...arguments];
+			let arrsum = arr.concat(arr2);// 将参数合并 不能写反
+			if (this instanceof fnop) { // 发生了new构造函数
+				that.apply(this, arrsum)
+			} else {
+				that.apply(obj, arrsum) // 把this保存下来 参数是数组
+			}
+		}
+		fnop.prototype = that.prototype; // 把空函数的原型对象修改成这里person1的原型对象 
+		newf.prototype = new fnop; // 再把新函数newf的原型对象作为空函数fnop的实例进行串联
+		// 也就是将下面的p1的原型对象作为空函数的fnop的实例串联起来
+		return newf
+	}
+	// person1.newBind(egg, '点赞', '投币')('充电')
+
+	// 当配合new使用
+	let p1 = person1.newBind(egg, '点赞', '投币');
+	let b = new p1('充电');
+	// console.log(b.colection);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	// call
+	// 我们能够全局调用call，call是个方法，所以我们要在function的原型上手写
 	Function.prototype.myCall = function (context) {
 		// 判断调用对象
 		if (typeof this != "undefined") {
@@ -19,7 +143,7 @@
 		// 首先获取参数 call接收一串参数 列表形式
 		let args = [...arguments].slice(1);
 		let res = null;
-		
+
 		// 判断context是否传入，如果没有，就设置为window
 		context = context || window;
 		// 将被调用的方法置入context的属性
@@ -65,7 +189,7 @@
 		// 首先获取参数 call接收一串参数 列表形式
 		let args = [...arguments].slice(1);
 		const fn = this;
-		const fNop = function() {};
+		const fNop = function () { };
 		return function Fn() {
 			return fn.apply(
 				this instanceof Fn ? this : context,
@@ -81,4 +205,5 @@
 		return fn
 	}
 </script>
+
 </html>
