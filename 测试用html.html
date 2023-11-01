@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
 </head>
-<script src="/eventBus.js"></script>
+<script src="/promise.js"></script>
 <body>
 	
 </body>
@@ -36,5 +36,78 @@
 	
 // }
 // console.log(majorityElement(num));
+
+// let arry = [1, 2, 3, 4, 5, 6];
+// let arry1 = arry.slice(0);
+// let arry2 = arry.slice(1, 4);
+// let arry3 = arry.slice(2, 4);
+// console.log(arry1);
+// console.log(arry2);
+// console.log(arry3);
+// let arry4 = arry.splice(3, 2, 8, 10)
+// console.log(arry);
+
+// let someResult = arry.some((item, index, arry) => 
+// 	// console.log(item);
+// 	// console.log(index);
+// 	// console.log(arry);
+// 	item > 0
+// )
+// console.log(someResult);
+// let numbers = [1, 2, 3, 4, 5, 4, 3, 2, 1];
+// let someResult = numbers.some((item, index, array) => item > 2);
+// console.log(someResult) // true
+
+// 深拷贝 对对象内部进行拷贝，要将Array Date RegExp Dom区分
+const deepClone = function(sourceObj) {
+	// 如果不是对象，直接退出，停止递归
+	if (typeof sourceObj !== "object") return;
+
+	// 深拷贝的初始值，对象/数组
+	let newObj = (sourceObj instanceof Array)? [] : {};
+
+	// for in 遍历对象属性 包括原型链上的属性
+	for(let key in sourceObj){
+		// 只访问对象的自身属性
+		if (sourceObj.hasOwnProperty(key)) {
+			// 当前属性还存在于新对象中时
+			if(!(key in newObj)) {
+				// 如果是Date  将时间赋值
+				if (sourceObj[key] instanceof Date) {
+					newObj[key] = new Date(sourceObj[key].getTime());
+				} 
+				// 若是正则
+				else if (sourceObj[key] instanceof RegExp) {
+					newObj[key] = new RegExp(sourceObj[key]);
+				}
+				// 若是DOM元素节点
+				else if ((typeof sourceObj[key] === "object") && sourceObj[key].nodeType === 1) {
+					// 使用DOM元素节点的cloneNode方法
+					let domEle = document.getElementsByTagName(sourceObj[key].nodeName)[0];
+					newObj[key] = domEle.cloneNode(true);
+				}
+				// 为对象，排除了Date Dom RegExp
+				else {
+					// 递归拷贝
+					newObj[key] = (typeof sourceObj[key] === "object")? deepClone(sourceObj[key]) : sourceObj[key];
+				}
+			}
+		}
+	}
+	
+	return newObj;
+}
+// 一个对象a
+const objA = {
+  name: 'jack',
+  birthday: new Date(),
+  pattern: /jack/g,
+  body: document.body,
+  others: [123,'coding', new Date(), /abc/gim,]
+}
+
+const objB = deepClone(objA);
+console.log(objA === objB);
+console.log(objA, objB);
 </script>
 </html>

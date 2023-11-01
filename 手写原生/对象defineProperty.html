@@ -15,10 +15,11 @@
 		password: '123456'
 	}
 	key = 'username'
+	let value = obj[key]; // 没有这一行 会堆栈报错，下面的get会无限的循环调用
 	Object.defineProperty(obj, key, {
 		get:function() {
 			console.log('get');
-			return obj[key]
+			return value
 		}
 	})
 	console.log(obj[key]);

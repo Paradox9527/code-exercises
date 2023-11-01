@@ -64,7 +64,6 @@
 		if (!arr) { // 没传直接调用返回结果
 			res = obj.p();
 		} else {
-			// 把参数都保留起来，并且不保留第一个this参数，arguments会包括this这个参数
 			let newArguments = [];
 			for (let i = 0; i < arr.length; i++) {
 				newArguments.push(arr[i])

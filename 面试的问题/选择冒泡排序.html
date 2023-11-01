@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+
+<script>
+    let array = [4, 1, 7, 10, 0, 9, 20];
+
+    // 冒泡排序
+    const bubble = function (array) {
+        let newArray = array;
+        for (let i = 0; i < array.length; i++) {
+            for (let j = 0; j < array.length - 1 - i; j++) {
+                if (newArray[j] > newArray[j + 1]) {
+                    let temp = newArray[j];
+                    newArray[j] = newArray[j + 1];
+                    newArray[j + 1] = temp;
+                }
+            }
+        }
+        return newArray
+    }
+
+    // 选择排序
+    const selectionSort = function (array) {
+        for(let i = 0; i < array.length - 1; i++) {
+            let index = i;
+            for (let j = i + 1; j < array.length; j++) {
+                if (array[index] < array[j]) {
+                    index = j;
+                }
+            }
+            if (index !== i) {
+                [array[i], array[index]] = [array[index], array[i]]
+            }
+        }
+        return array;
+    }
+
+    const sortArray = bubble(array);
+    const selectionArray = selectionSort(array);
+    console.log(sortArray);
+    console.log(selectionArray);
+</script>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+<script>
+    // 深拷贝 支持Array Date Regexp Dom 原理就是递归
+    const deepClone = function (sourceObj) {
+        // 判断是否为对象，否就退出
+        if (typeof sourceObj !== "object") return;
+
+        // 新对象是数组也可以是对象
+        let newObj = (sourceObj instanceof Array) ? [] : {};
+
+        // 遍历对象属性 用for in
+        for (let key in sourceObj) {
+            // 只访问对象自身属性
+            if (sourceObj.hasOwnProperty(key)) {
+                // 当前属性未在newObj中时进行赋值操作
+                if (!(key in newObj)) {
+                    // Date
+                    if (sourceObj[key] instanceof Date) {
+                        newObj[key] = new Date(sourceObj[key].getTime());
+                    } 
+                    // RegExp
+                    else if (sourceObj[key] instanceof RegExp) {
+                        newObj[key] = new RegExp(sourceObj[key]);
+                    }
+                    // DOM元素节点
+                    else if ((typeof sourceObj[key] === "object") && sourceObj[key].nodeType === 1) {
+                        let domEle = document.getElementsByTagName(sourceObj[key].nodeName)[0];
+                        newObj[key] = domEle.cloneNode(true);
+                    } 
+                    // array object 递归
+                    else {
+                        newObj[key] = (typeof sourceObj[key] === "object")? deepClone(sourceObj[key]) : sourceObj[key]; 
+                    }
+                }
+            }
+        }
+
+        return newObj;
+    }
+
+    // 一个对象a
+    const objA = {
+        name: 'jack',
+        birthday: new Date(),
+        pattern: /jack/g,
+        body: document.body,
+        others: [123, 'coding', new Date(), /abc/gim,]
+    }
+
+    const objB = deepClone(objA);
+    console.log(objA === objB);
+    console.log(objA, objB); 
+</script>
+
+</html>

@@ -23,21 +23,25 @@
     // 实现原理：时间戳写法，定时器写法，两者结合写法
 
     // 时间戳写法，事件会立即执行，停止触发后没有办法再次执行
-    function throttled1 (fn, delay = 1000) {
+    function throttled1 (fn, delay = 2000) {
         let oldTime = Date.now();
-        return function (...args) {
+        return function () {
+            let context = this;
+            let args = arguments;
             let newTime = Date.now();
             if (newTime - oldTime >= delay) {
-                fn.apply(null, args);
+                fn.apply(this, args);
                 oldTime = Date.now();
             } 
         }
     }
 
     // 定时器写法 delay毫秒后第一次执行，第二次事件停止出发后依然会再一次执行
-    function throttled2 (fn, delay = 1000) {
+    function throttled2 (fn, delay = 2000) {
         let timer = null;
-        return function (...args) {
+        return function () {
+            let context = this;
+            let args = arguments;
             if(!timer) {
                 timer = setTimeout(() => {
                     fn.apply(this, args);
@@ -48,7 +52,7 @@
     }
 
     // 两者结合较为精准
-    function throttled3 (fn, delay = 1000) {
+    function throttled3 (fn, delay = 2000) {
         let timer = null;
         let startTime = Date.now();
         return function () {
@@ -69,6 +73,6 @@
 
 
     // 增加监听 窗口缩放，改变颜色 没有节流 会闪闪发光一样的感觉
-    window.addEventListener('resize', throttled3(colorRamdon))
+    window.addEventListener('resize', throttled1(colorRamdon))
 </script>
 </html>
