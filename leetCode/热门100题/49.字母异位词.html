@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="content">
+        给你一个字符串数组，请你将 字母异位词 组合在一起。可以按任意顺序返回结果列表。
+
+        字母异位词 是由重新排列源单词的所有字母得到的一个新单词。
+    </div>
+    <div class="example">
+        示例 1:
+
+        输入: strs = ["eat", "tea", "tan", "ate", "nat", "bat"]
+        输出: [["bat"],["nat","tan"],["ate","eat","tea"]]
+    </div>
+</body>
+<script>
+    let strs = ["eat", "tea", "tan", "ate", "nat", "bat"];
+    // 方式一：字母排序，字母异位，无非就是相同字母打乱顺序，排序好后，作为键值，值赋给这个键。最后返回这个map，将其转成数组返回。
+    let groupAnagrams = function(strs) {
+        let strMap = new Map();
+        for (str of strs) {
+            let key = Array.from(str).sort().toString();
+            let list = strMap.get(key)? strMap.get(key) : new Array();
+            list.push(str);
+            strMap.set(key, list);
+        }
+        return Array.from(strMap.values());
+    }
+    // console.log(groupAnagrams(strs));
+
+    // 方式二：对应一组的字符串，字母出现次数相同。计数，每个字符串中字符出现次数相同的归为一组。
+    // 将每个字母出现的次数作为键值 只针对字符全是小写的这种情况
+    let groupAnagramsBycount = function (strs) {
+        let strMap = new Map();
+        for (str of strs) {
+            let count = new Array(26).fill(0);
+            for (c of str) {
+                // console.log(c.charCodeAt() - 'a'.charCodeAt());
+                count[c.charCodeAt() - 'a'.charCodeAt()]++
+            }
+            // console.log(count);
+            let key = count.toString();
+            let list = strMap.get(key)? strMap.get(key) : new Array();
+            list.push(str);
+            strMap.set(key, list);
+        }
+        // console.log(strMap);
+        return Array.from(strMap.values());
+    }
+    console.log(groupAnagramsBycount(strs));
+</script>
+</html>
