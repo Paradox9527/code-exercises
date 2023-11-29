@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="content">
+        给你一个整数数组 nums ，判断是否存在三元组 [nums[i], nums[j], nums[k]] 满足 i != j、i != k 且 j != k ，同时还满足 nums[i] + nums[j] +
+        nums[k] == 0 。请
+
+        你返回所有和为 0 且不重复的三元组。
+
+        注意：答案中不可以包含重复的三元组。
+    </div>
+    <div class="example">
+        输入：nums = [-1,0,1,2,-1,-4]
+        输出：[[-1,-1,2],[-1,0,1]]
+        解释：
+        nums[0] + nums[1] + nums[2] = (-1) + 0 + 1 = 0 。
+        nums[1] + nums[2] + nums[4] = 0 + 1 + (-1) = 0 。
+        nums[0] + nums[3] + nums[4] = (-1) + 2 + (-1) = 0 。
+        不同的三元组是 [-1,0,1] 和 [-1,-1,2] 。
+        注意，输出的顺序和三元组的顺序并不重要。
+    </div>
+</body>
+
+<script>
+    // 排序加双指针。假设三个数，a b c, 先从小到大排列
+    // 以第一个数为第一次循环，b c俩数字利用双指针，b从小往大循环遍历，而c要一直在b的右边
+    // 即b增大，c也变大
+    // 这样时间复杂度会变成O（n） 再加上第一层循环即 N平方
+    let nums = [-1,0,1,2,-1,-4];
+    let threeSum = function (nums) {
+        let res = [];
+        // 排序
+        let len = nums.length;
+        let sortArry = nums.sort((a, b) => { return a - b });
+        // console.log(sortArry);
+        // 遍历数组，枚举第一个数字a
+        for (let first = 0; first < len; ++first) {
+            // 每次遍历要和上一次的数字不相同
+            if (first > 0 && sortArry[first] === sortArry[first - 1]) {
+                continue;
+            }
+            let third = len - 1; // 使得第三个数是从最大的位置开始
+            let target = -sortArry[first]; // 我们要找的目标 b + c = -a 
+            // 枚举第二个数字b
+            for (let second = first + 1; second < len; ++second) {
+                // 同样需要跟上次枚举的数字不一样
+                if (second > first + 1 && sortArry[second - 1] === sortArry[second]) {
+                    continue;
+                }
+                // 需要保证c的位置在b的右侧
+                while (second < third && sortArry[second] + sortArry[third] > target) {
+                    --third;
+                }
+                // 如果指针重合了，即随着枚举b的流程下，b = c了
+                // 就不会有满足 a + b + c = 0 并且 b<c的 c了退出循环
+                if (second === third) {
+                    break;
+                }
+                if (sortArry[second] + sortArry[third] === target) {
+                    let list = [];
+                    list.push(sortArry[first]);
+                    list.push(sortArry[second]);
+                    list.push(sortArry[third]);
+                    res.push(list);
+                }
+            }
+        }
+        return res;
+    }
+    console.log(threeSum(nums));
+</script>
+</html>
