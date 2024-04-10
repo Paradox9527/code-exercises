@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+
+<script>
+    // 数组扁平化就是将多层嵌套的数组，处理成只有一层的数组。
+
+    // 1.递归
+    const flattenByRecursion = function (arr) {
+        let result = [];
+        const flattenHelper = function (arr) {
+            for(let i = 0; i < arr.length; i++) {
+                if (Array.isArray(arr[i])) {
+                    flattenHelper(arr[i])
+                } else {
+                    result.push(arr[i]);
+                }
+            }
+        }
+        flattenHelper(arr);
+        return result;
+    }
+
+    // 2.reduce
+    const flattenByReduce = function (arr) {
+        return arr.reduce((acc, cur) => {
+            return Array.isArray(cur) ? acc.concat(flattenByReduce(cur)) : acc.concat(cur);
+        }, []);
+    }
+
+    // 3.some 加 扩展运算符
+    const flattenBySpreadOperator = function (arr) {
+        while (arr.some(item => Array.isArray(item))) {
+            arr = [].concat(...arr);
+        }
+        return arr;
+    }
+
+    // 4.flat(ES2019)
+    const flattenByFlat = function (arr) {
+        return arr.flat(Infinity);
+    }
+
+    // 5.toString和split 方法
+    const flattenByToString = function (arr) {
+        // console.log(arr.toString().split(',')); // 这里的数组里的元素是字符串
+        return arr.toString().split(",").map(item => +item);
+    }
+
+    // 6.正则和JSON
+    const flattenByRegexAndJson = function (arr) {
+        return JSON.parse("[" + JSON.stringify(arr).replace(/\[|\]/g, "") + "]");
+    }
+
+    // 7.使用堆栈
+    const flattenByStack = function (arr) {
+        let result = [];
+        let stack = [...arr];
+        while (stack.length) {
+            let next = stack.pop(); // pop 删除最后一个元素 并返回这个
+            if (Array.isArray(next)) {
+                stack.push(...next);
+            } else {
+                result.unshift(next); // 将元素放到开头
+            }
+        }
+        return result;
+    }
+
+    // 8.扩展运算符加递归
+    const flattenBySpreadOperatorAndRecursion = function (arr) {
+        return arr.reduce((acc, cur) => {
+            return Array.isArray(cur) ? [...acc, ...flattenBySpreadOperatorAndRecursion(cur)] : [...acc, cur];
+        }, [])
+    }
+
+    // 调用示例
+    let nestedArray = [1, [2, [3, 4], 5], 6, [7]];
+    console.log(flattenByRecursion(nestedArray));
+    console.log(flattenByReduce(nestedArray));
+    console.log(flattenBySpreadOperator(nestedArray));
+    console.log(flattenByFlat(nestedArray));
+    console.log(flattenByToString(nestedArray));
+    console.log(flattenByStack(nestedArray));
+    console.log(flattenBySpreadOperatorAndRecursion(nestedArray));
+</script>
+</html>

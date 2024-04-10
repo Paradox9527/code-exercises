@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+
+<script>
+    // 概念：指的是定义一系列的算法，把他们一个个封装起来，目的是将算法的使用与实现分离开
+    // 一个基于策略模式的程序至少由两部分组成：策略类，环境类；
+    // 1.策略类，策略类封装了具体的算法，并负责具体的计算过程。
+    // 2.环境类Context,Context接受客户的请求，随后把请求委托给某一个策略类。
+
+    // 最简单的设计，用if else， 一个方法里，根据某个判断条件去做
+    // 改用策略模式，先定义一系列算法，把他们一个个封装起来，将不变的部分和变化的部分隔开
+    var obj = {
+        "A": function (salary) {
+            return salary * 4;
+        },
+        "B": function (salary) {
+            return salary * 3;
+        },
+        "C": function (salary) {
+            return salary * 2;
+        }
+    }
+    var caculateBouns = function (level, salary) {
+        return obj[level](salary);
+    }
+    console.log(caculateBouns('A', 10000));
+    // obj对应的是策略类，而calculateBouns对应上下通信类
+
+    // 应用场景优点
+    // 策略模式利用组合，委托等技术和思想，有效的避免很多if条件语句
+    // 策略模式提供了开放-封闭原则，使代码更容易理解和扩展
+    // 策略模式中的代码可以复用。
+    // 策略模式不仅仅用来封装算法，在实际开发中，通常会把算法的含义扩散开来，使策略模式也
+    // 可以用来封装一系列的业务规则。
+    // 只要这些业务规则指向的目标一致，并且可以被替换使用，我们就可以用策略模式来封装
+</script>
+</html>

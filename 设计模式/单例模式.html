@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    // 概念：一种创建对象的方式模式，这种模式涉及到一个单一的类，该类负责
+    // 创建自己的对象，同时确保只有单个对象被创建。
+
+    /*---------------------------------------*/
+    // 简单实现，用一个变量来标志当前的类已经创建过对象，如果下次获取当前
+    // 类的实例时，直接返回之前创建的对象即可。
+    
+    // 定义一个类，构造函数
+    function Singleton (name) {
+        this.name = name;
+        this.instance = null; // 那个标志
+    }
+    // 原型扩展类的一个方法getName()
+    Singleton.prototype.getName = function () {
+        console.log(this.name);
+    }
+    // 获取类的实例
+    Singleton.getInstance = function (name) {
+        if (!this.instance) {
+            this.instance = new Singleton(name);
+        }
+        return this.instance;
+    }
+    // 获取对象1
+    const a = Singleton.getInstance('a');
+    // 获取对象2
+    const b = Singleton.getInstance('b');
+    // 获取对象3
+    const c = new Singleton('c');
+    // 进行比较 
+    console.log(a === b);// true
+    console.log(a === c);// false
+
+    /*-------------------------------------------*/
+    // 使用闭包也能实现
+    // 其余操作跟第一种没变化，创建类，获取对象，只有获取实例不一样
+    Singleton.getInstance1 = (function () {
+        var instance1 = null;
+        return function(name) {
+            if (this.instance1) {
+                this.instance1 = new Singleton(name);
+            }
+            return this.instance1;
+        }
+    })();
+
+    // 可以两者结合一下，就可以不用在类中定义那个标志变量，这样就是构造函数形式
+</script>
+</html>

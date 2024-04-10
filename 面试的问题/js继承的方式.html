@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    // 1.原型链继承
+    // function Parent() {
+    //     this.name = 'parent1';
+    //     this.play = [1, 2, 3];
+    // }
+    // function Child() {
+    //     this.type = 'child2';
+    // }
+    // Child.prototype = new Parent();
+    // console.log(new Child());
+
+    // const s1 = new Child()
+    // const s2 = new Child()
+    // s1.play.push(4)
+    // console.log(s1.play, s2.play);// 都变化了，这是因为两个实例使用的是同一个原型对象
+
+    // 2.构造函数继承 借助call调用Parent函数
+    // function Parent() {
+    //     this.name = 'parent1';
+    // }
+    // Parent.prototype.getName = function () {
+    //     return this.name;
+    // }
+
+    // function Child() {
+    //     Parent.call(this);
+    //     this.type = 'child'
+    // }
+
+    // let child = new Child();
+    // console.log(child);
+    // console.log(child.getName());// 会报错
+    // 子类无法继承父类之前自己定义的方法。
+    // 相比第一种原型链继承，父类的引用属性不回被共享了。但是只能继承父类的实例属性和方法，不能继承原型属性或者方法
+
+
+    // 3.组合继承 将上述的结合起来
+    // function Parent() {
+    //     this.name = 'parent3';
+    //     this.play = [1, 2, 3];
+    // }
+
+    // Parent.prototype.getName = function() {
+    //     return this.name;
+    // }
+
+    // function Child() {
+    //     // 第二次调用Parent()
+    //     Parent.call(this);
+    //     this.type = 'child3'
+    // }
+
+    // // 第一次调用Parent()
+    // Child.prototype = new Parent();
+    // // 手动挂上构造器，指向自己的构造函数
+    // Child.prototype.constructor = Child;
+
+    // var s1 = new Child();
+    // var s2 = new Child();
+    // s1.play.push(4);
+    // console.log(s1.play, s2.play);
+    // console.log(s1.getName());
+    // console.log(s2.getName());
+    // 上述问题都解决了，但是Parent()的代码执行了两次，造成了多构造一次的性能开销
+
+
+    // 4.原型式继承 借助了Object.create方法实现普通对象的继承
+    // let parent = {
+    //     name: "parent4",
+    //     friends: ["p1", "p2", "p3"],
+    //     getName: function () {
+    //         return this.name;
+    //     }
+    // }
+
+    // let person1 = Object.create(parent);
+    // person1.name = 'tom';
+    // person1.friends.push("jerry");
+
+    // let person2 = Object.create(parent);
+    // person2.friends.push("lucy");
+
+    // console.log(person1.name); // tom
+    // console.log(person1.name === person1.getName()); // true
+    // console.log(person2.name); // parent4
+    // console.log(person1.friends); // ["p1", "p2", "p3","jerry","lucy"]
+    // console.log(person2.friends); // ["p1", "p2", "p3","jerry","lucy"]
+
+    // 因为Object.create方法实现的是浅拷贝，多个实例的引用类型属性指向相同的内存，存在被篡改的可能
+
+    // 5.寄生式继承
+    // let parent = {
+    //     name: "parent5",
+    //     friends: ["p1", "p2", "p3"],
+    //     getName: function () {
+    //         return this.name;
+    //     }
+    // }
+
+    // function clone(original) {
+    //     let clone = Object.create(original);
+    //     clone.getFriends = function () {
+    //         return this.friends;
+    //     }
+    //     return clone;
+    // }
+
+    // let person1 = clone(parent);
+    // let person2 = clone(parent);
+    // person1.friends.push("3")
+    // console.log(person1.getName());
+    // console.log(person1.getFriends());
+    // console.log(person2.getFriends());
+    // 跟原型式一样的问题
+
+    // 6.寄生组合式继承。 最优的一种了
+    function clone(parent, child) {
+        // 这里改用Object.create 就可以减少组合继承中多进行一次构造的过程
+        child.prototype = Object.create(parent.prototype);
+        child.prototype.constructor = child;
+    }
+
+    function Parent() {
+        this.name = 'parent6';
+        this.play = [1, 2, 3];
+    }
+
+    Parent.prototype.getName = function () {
+        return this.name;
+    }
+
+    function Child () {
+        Parent.call(this);
+        this.friends = 'child5';
+    }
+
+    clone(Parent, Child);
+
+    Child.prototype.getFriends = function () {
+        return this.friends;
+    }
+
+    let person1 = new Child();
+    console.log(person1); // {name: 'parent6', play:[1,2,3], friends: 'child5'}
+    console.log(person1.getFriends());
+    console.log(person1.getName());
+
+
+    // 7.extends
+    class Person {
+        constructor(name) {
+            this.name = name
+        }
+        // 原型方法
+        // 即Person.prototype.getName = function() {}
+        // 下面可以简写为 getName() {...}
+        getName = function() {
+            console.log('Person:', this.name);
+        }
+    }
+
+    class Gamer extends Person {
+        constructor(name, age) {
+            // 子类中存在构造函数，则需要在使用this之前首先调用super()
+            // 该关键字是用于调用对象父类上的函数的。在类的构造函数中使用，也可以在类的方法之外的上下文中使用
+            super(name); // 调用父类的属性
+            this.age = age;
+        }
+    }
+
+    const asuna = new Gamer('Asuna', 20);
+    asuna.getName(); // 调用到父类的方法
+</script>
+</html>

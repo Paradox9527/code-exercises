@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    // 观察者模式定义了对象间的一种 一对多的依赖关系。
+    // 当一个对象的状态发生改变时，所有依赖于它的对象都将得到通知，并自动更新
+    // 观察者模式实现方式
+    class Subject { // 被观察者模式
+        constructor() {
+            this.observerList = [];
+        }
+        addObserver(observer) {
+            this.observerList.push(observer);
+        }
+        removeObserver(observer) {
+            let index = this.observerList.findIndex(o => o.name === observer.name);
+            this.observerList.splice(index, 1);
+        }
+        notifyObservers(message) {
+            const observers = this.observerList;
+            observers.forEach(observer => observer.notified(message));
+        }
+    }
+    class Observer { // 观察者
+        constructor(name, subject) {
+            this.name = name;
+            if (subject) {
+                subject.addObserver(this);
+            }
+        }
+        notified(message) {
+            console.log(this.name, 'got message', message);
+        }
+    }
+    // 调用
+    const subject = new Subject();
+    const observerA = new Observer('observerA', subject);
+    const observerB = new Observer('observerB');
+    // subject.addObserver(observerB);
+    // subject.notifyObservers('Hello from subject'); // AB都反馈了
+    // subject.removeObserver(observerB);
+    // subject.notifyObservers('Hello Again') // 只有A了
+    /**------------------------------------------------------------------------------------*/
+
+    // 发布订阅模式
+    // 一种消息范式，消息的发送者（发布者）不会将消息直接发送给特定的接收者（订阅者）
+    // 而是将发布的消息分为不同的类别，无需了解哪些订阅者（如果有的话）
+
+    // 同样，订阅者可以表达对一个或多个类别的兴趣，只接收感兴趣的消息，无需了解哪些发布者存在
+    // 实现
+    class PubSub { // 发布者模式
+        constructor() {
+            this.messages = {};
+            this.listeners = {};
+        }
+        publish(type, content) { // 添加发布者
+            const existContent = this.messages[type];
+            if (!existContent) {
+                this.messages[type] = [];
+            }
+            this.messages[type].push(content);
+        }
+        subscribe(type, cb) { // 添加订阅者
+            const existListener = this.listeners[type];
+            if (!existListener) {
+                this.listeners[type] = [];
+            }
+            this.listeners[type].push(cb);
+        }
+        notify(type) {
+            const messages = this.messages[type];
+            const subscribers = this.listeners[type] || [];
+            subscribers.forEach((cb, index) => cb(messages[index]));
+        }
+    }
+    class Publisher { // 发布者
+        constructor(name, context) {
+            this.name = name;
+            this.context = context;
+        }
+        publish(type, content) {
+            this.context.publish(type, content);
+        }
+    }
+    class Subscriber { // 订阅者
+        constructor(name, context) {
+            this.name = name;
+            this.context = context;
+        }
+        subscribe(type, cb) {
+            this.context.subscribe(type, cb);
+        }
+    }
+
+    // 调用
+    const Type_A = 'music';
+    const Type_B = 'movie';
+    const Type_C = 'novel';
+
+    const pubsub = new PubSub();
+
+    const publisherA = new Publisher('publisherA', pubsub);
+    publisherA.publish(Type_A, 'we are young');
+    publisherA.publish(Type_B, 'the silicon valley');
+    const publisherB = new Publisher('publisherB', pubsub);
+    publisherB.publish(Type_A, 'stronger');
+    const publisherC = new Publisher('publisherC', pubsub);
+    publisherC.publish(Type_C, 'a brief history of time');
+
+    const subscriberA = new Subscriber('subscriberA', pubsub);
+    subscriberA.subscribe(Type_A, res => {
+        console.log('subscriberA received', res);
+    })
+
+    const subscriberB = new Subscriber('subscriberB', pubsub);
+    subscriberB.subscribe(Type_C, res => {
+        console.log('subscriberB received', res);
+    })
+
+    const subscriberC = new Subscriber('subscriberC', pubsub);
+    subscriberC.subscribe(Type_B, res => {
+        console.log('subscriberC received', res);
+    })
+
+    pubsub.notify(Type_A);
+    pubsub.notify(Type_B);
+    pubsub.notify(Type_C);
+
+    // 两者区别，设计思路是一样的，但是发布订阅模式要通过一个sub，即一个桥梁
+    // 让第三方来做
+    // 观察者模式大多数时候是同步的，比如当事件触发，subject就会调用观察者方法
+    // 而发布订阅模式是异步的，使用消息队列的形式
+    // 在发布订阅模式中，组件时松散耦合的，正好和观察者模式相反
+    // 观察者模式中，观察者知道被观察者的存在的。然而发布订阅模式，两者不知道对方的存在
+    // 只有通过消息代理（桥梁）进行通信
+</script>
+</html>

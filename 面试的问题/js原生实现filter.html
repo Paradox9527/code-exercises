@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    // js中filter函数用于创建一个新数组，该数组包含通过提供的函数实现的测试的所有元素
+    const myFilter = function (array, callback) {
+        const filteredArray = [];
+        for (let i = 0; i < array.length; i++) {
+            if (callback(array[i], i, array)) {
+                filteredArray.push(array[i]);
+            }
+        }
+        return filteredArray;
+    }
+
+    // 调用实例
+    const numbers = [1, 2, 3, 4, 5];
+    const evenNumbers = myFilter(numbers, number => number % 2 === 0);
+    console.log(evenNumbers);
+</script>
+</html>
