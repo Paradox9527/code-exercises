@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    /* 模态框样式 */
+    .modal {
+        display: none;
+        /* 默认隐藏 */
+        position: fixed;
+        /* 固定位置 */
+        z-index: 1;
+        /* 位于顶层 */
+        left: 0;
+        top: 0;
+        width: 100%;
+        /* 全屏宽度 */
+        height: 100%;
+        /* 全屏高度 */
+        overflow: auto;
+        /* 超出内容可滚动 */
+        background-color: rgb(0, 0, 0);
+        /* 背景颜色带些透明度 */
+        background-color: rgba(0, 0, 0, 0.4);
+        /* 透明度 */
+    }
+
+    /* 模态框内容 */
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        /* 垂直居中 */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+    }
+
+    /* 关闭按钮 */
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>
+
+<body>
+    <!-- 模态框（隐藏） -->
+    <div id="myModal" class="modal">
+        <!-- 模态框内容 -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>这里是模态框内容！</p>
+        </div>
+    </div>
+
+    <!-- 触发模态框的按钮 -->
+    <button id="openBtn">打开模态框</button>
+</body>
+<script>
+    // 获取模态框元素
+    var modal = document.getElementById('myModal');
+    // 获取打开模态框的按钮
+    var btn = document.getElementById('openBtn');
+    // 获取关闭按钮
+    var span = document.getElementsByClassName("close")[0];
+
+    // 打开模态框函数
+    function openModal() {
+        modal.style.display = "block";
+    }
+
+    // 关闭模态框函数
+    function closeModal() {
+        modal.style.display = "none";
+    }
+
+    // 绑定打开模态框事件
+    btn.addEventListener("click", openModal);
+    // 绑定关闭模态框事件
+    span.addEventListener("click", closeModal);
+    // 绑定键盘事件，当按下ESC键时关闭模态框
+    window.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+            closeModal();
+        }
+    });
+</script>
+
+</html>
